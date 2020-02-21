@@ -11,6 +11,10 @@
                 <a class="nav-link" href="{{ path("public_site_home") }}">Home <span
                             class="sr-only">(current)</span></a>
             </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{{ path("public_site_page") }}">User page <span
+                            class="sr-only">(current)</span></a>
+            </li>
         </ul>
         {% if is_granted('IS_AUTHENTICATED_FULLY') %}
             <div class="btn-group" role="group" aria-label="Button group with nested dropdown">

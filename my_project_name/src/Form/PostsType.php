@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Posts;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,9 +16,9 @@ class PostsType extends AbstractType
             ->add('title')
             ->add('text')
             ->add('date')
-            ->add('url')
+//            ->add('url')
             ->add('views')
-            ->add('visible')
+//            ->add('visible')
             ->add('tags')
         ;
     }

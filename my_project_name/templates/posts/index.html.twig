@@ -12,9 +12,9 @@
                 <th>Title</th>
                 <th>Text</th>
                 <th>Date</th>
-                <th>Url</th>
+{#                <th>Url</th>#}
                 <th>Views</th>
-                <th>Visible</th>
+{#                <th>Visible</th>#}
                 <th>actions</th>
             </tr>
         </thead>
@@ -25,9 +25,9 @@
                 <td>{{ post.title }}</td>
                 <td>{{ post.text }}</td>
                 <td>{{ post.date ? post.date|date('Y-m-d') : '' }}</td>
-                <td>{{ post.url }}</td>
+{#                <td>{{ post.url }}</td>#}
                 <td>{{ post.views }}</td>
-                <td>{{ post.visible ? 'Yes' : 'No' }}</td>
+{#                <td>{{ post.visible ? 'Yes' : 'No' }}</td>#}
                 <td>
                     <a href="{{ path('posts_show', {'id': post.id}) }}">show</a>
                     <a href="{{ path('posts_edit', {'id': post.id}) }}">edit</a>

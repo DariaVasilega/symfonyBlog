@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block main_container %}
+    <div class="col-md-12 my-5">
+        <div class="row">
+            {% for user in userName %}
+                <div class="jumbotron w-100">
+                  <h7>Name</h7>
+                    <h3>{{ user.userName }}</h3>
+                    <h7>Email</h7>
+                    <h4>{{ user.email }}</h4>
+                    <h7>Something interesting</h7>
+                    <h4>{{ user.status }}</h4>
+                    <hr class="my-4">
+                </div>
+            {% else %}
+                <h3>No Data Found</h3>
+            {% endfor %}
+        </div>
+    </div>
+
+{#    <form action="doUpload" method="post" enctype="multipart/form-data">#}
+
+{#        <input type="hidden" name="token" value="{{ csrf_token('upload') }}" />#}
+
+{#        <div>#}
+{#            <label>File to upload:</label>#}
+{#            <input type="file" name="myfile">#}
+{#        </div>#}
+
+{#        <button type="submit">Send</button>#}
+
+{#    </form>#}
+
+{% endblock %}
