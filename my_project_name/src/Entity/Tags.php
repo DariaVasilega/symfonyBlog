@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\IdTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,12 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Tags
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    use IdTrait;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -24,18 +20,16 @@ class Tags
     private $title;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Posts", inversedBy="tags")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Posts", mappedBy="tags")
      */
     private $posts;
 
     public function __construct()
     {
+        if (is_null($this->id)) {
+            $this->generateId();
+        }
         $this->posts = new ArrayCollection();
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getTitle(): ?string
@@ -58,21 +52,9 @@ class Tags
         return $this->posts;
     }
 
-    public function addPost(Posts $post): self
+
+    public function __toString()
     {
-        if (!$this->posts->contains($post)) {
-            $this->posts[] = $post;
-        }
-
-        return $this;
-    }
-
-    public function removePost(Posts $post): self
-    {
-        if ($this->posts->contains($post)) {
-            $this->posts->removeElement($post);
-        }
-
-        return $this;
+        return $this->title;
     }
 }

@@ -2,21 +2,20 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\IdTrait;
+use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ApiResource
  * @ORM\Entity(repositoryClass="App\Repository\PostsRepository")
  */
-class Posts
+final class Posts
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+   use IdTrait;
+
     /**
      * @ORM\Column(type="string", length=150)
      */
@@ -54,13 +53,10 @@ class Posts
 
     public function __construct()
     {
+        if (is_null($this->id)) {
+            $this->generateId();
+        }
         $this->tags = new ArrayCollection();
-    }
-
-
-    public function getId(): ?int
-    {
-        return $this->id;
     }
 
     public function getTitle(): ?string
@@ -68,7 +64,7 @@ class Posts
         return $this->title;
     }
 
-    public function setTitle(?string $title): self
+    public function setTitle(string $title): self
     {
         $this->title = $title;
 
@@ -128,7 +124,7 @@ class Posts
         return $this->visible;
     }
 
-    public function setVisible(bool $visible): self
+    public function setVisible(bool $visible): ?self
     {
         $this->visible = $visible;
 
@@ -147,7 +143,6 @@ class Posts
     {
         if (!$this->tags->contains($tag)) {
             $this->tags[] = $tag;
-            $tag->addPost($this);
         }
 
         return $this;
@@ -157,9 +152,13 @@ class Posts
     {
         if ($this->tags->contains($tag)) {
             $this->tags->removeElement($tag);
-            $tag->removePost($this);
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->title;
     }
 }

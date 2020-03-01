@@ -5,8 +5,9 @@ namespace App\Repository;
 use App\Entity\Posts;
 use App\Entity\Tags;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -17,7 +18,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class PostsRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Posts::class);
     }
@@ -77,6 +78,59 @@ class PostsRepository extends ServiceEntityRepository
 
         return $result[0];
     }
+
+    /**
+     * @param string $url
+     * @return NotFoundHttpException
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function increaseViews(string $url)
+    {
+        $em = $this->getEntityManager();
+        $post = $em->getRepository(Posts::class)->findOneBy(["url" => $url]);
+        if (!$post) {
+            return new NotFoundHttpException("Page not found");
+        }
+        $post->setViews($post->getViews() + 1);
+        $em->flush();
+    }
+
+
+    /**
+     * @param array $posts
+     * @return array
+     */
+    public function PostsFilteredArray(array $posts): array
+    {
+        $postsArray = [];
+        foreach ($posts as $post) {
+            $postsArray[] = [
+                "id" => $post->getId(),
+                "title" => $post->getTitle(),
+                "date" => $post->getDate(),
+                "url" => $post->getUrl(),
+                "views" => $post->getViews(),
+                "visible" => $post->getVisible()
+            ];
+        }
+        return $postsArray;
+    }
+
+
+    /**
+     * @param $array
+     * @return Response
+     */
+    public function returnAsJSON($array): Response
+    {
+        $response = new Response();
+        $response->setContent(json_encode((array)$array));
+        $response->headers->set("Content-Type", "application/json");
+
+        return $response;
+    }
+
     // /**
     //  * @return Posts[] Returns an array of Posts objects
     //  */
@@ -105,20 +159,4 @@ class PostsRepository extends ServiceEntityRepository
         ;
     }
     */
-    /**
-     * @param string $url
-     * @return NotFoundHttpException
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
-     */
-    public function increaseViews(string $url)
-    {
-        $em = $this->getEntityManager();
-        $post = $em->getRepository(Posts::class)->findOneBy(["url" => $url]);
-        if (!$post) {
-            return new NotFoundHttpException("Page not found");
-        }
-        $post->setViews($post->getViews() + 1);
-        $em->flush();
-    }
 }

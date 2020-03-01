@@ -3,7 +3,6 @@
 namespace App\Controller\PublicSite;
 
 use App\Entity\Posts;
-use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,20 +20,6 @@ final class HomeController extends AbstractController
 
         return $this->render('public_site/home/index.html.twig', [
             'posts' => $listPosts,
-        ]);
-    }
-
-    /**
-     * @Route("/userPage", name="public_site_page")
-     */
-    public function userPage(Request $request)
-    {
-        $db = $this->getDoctrine()->getManager();
-
-        $listPosts = $db->getRepository(User::class)->findUserId($request->query->getInt(1));
-
-        return $this->render('public_site/home/userPage.html.twig', [
-            'userName' => $listPosts,
         ]);
     }
 
